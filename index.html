@@ -1,5 +1,28 @@
 <h1>Devops days events</h1>
-<ul>
-  <li>Paris</li>
-  <li>Basel</li>
-</ul>
+<div id="json-list"></div>
+
+<script>
+  // Fonction pour afficher chaque objet JSON dans une liste
+  function displayJsonData(data) {
+    const container = document.getElementById("json-list");
+    data.forEach((person) => {
+      const ul = document.createElement("ul"); // Créer une nouvelle liste non ordonnée (ul)
+      for (const key in person) {
+        if (person.hasOwnProperty(key)) {
+          const li = document.createElement("li"); // Créer un nouvel élément de liste (li)
+          li.innerHTML = `<span class="label">${key} :</span> ${person[key]}`; // Afficher la clé et la valeur
+          ul.appendChild(li); // Ajouter l'élément li à la liste ul
+        }
+      }
+      container.appendChild(ul); // Ajouter la liste ul au conteneur
+    });
+  }
+
+  // Appel de la fonction pour afficher les données
+  fetch("events.json")
+    .then((response) => response.json()) // Convertir la réponse en JSON
+    .then((data) => displayJsonData(data)) // Afficher les données
+    .catch((error) => {
+      console.error("Erreur de chargement du fichier JSON:", error); // Afficher une erreur en cas de problème
+    });
+</script>
