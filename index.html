@@ -6,22 +6,33 @@
   function displayJsonData(data) {
     const container = document.getElementById("json-list");
     data.forEach((person) => {
-      const ul = document.createElement("ul"); // Créer une nouvelle liste non ordonnée (ul)
+      const ul = document.createElement("ul");
+
       for (const key in person) {
         if (person.hasOwnProperty(key)) {
-          const li = document.createElement("li"); // Créer un nouvel élément de liste (li)
-          li.innerHTML = `<span class="label">${key} :</span> ${person[key]}`; // Afficher la clé et la valeur
-          ul.appendChild(li); // Ajouter l'élément li à la liste ul
+          if (key === "logo_url") {
+            const br = document.createElement("br");
+            ul.appendChild(br);
+
+            const img = document.createElement("img");
+            img.src = person[key];
+            ul.appendChild(img);
+          } else {
+            const li = document.createElement("li");
+            li.innerHTML = `<span>${key} :</span> ${person[key]}`;
+            ul.appendChild(li);
+          }
         }
       }
-      container.appendChild(ul); // Ajouter la liste ul au conteneur
+
+      container.appendChild(ul);
     });
   }
 
   // Appel de la fonction pour afficher les données
   fetch("events.json")
     .then((response) => response.json()) // Convertir la réponse en JSON
-    .then((data) => displayJsonData(data)) // Afficher les données
+    .then((json) => displayJsonData(json.data)) // Afficher les données
     .catch((error) => {
       console.error("Erreur de chargement du fichier JSON:", error); // Afficher une erreur en cas de problème
     });
