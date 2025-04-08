@@ -5,6 +5,9 @@
 - typo in DevOps days
 
 ### Fonctionnalités
+- Server http local
+- Generate changelog
+- Config changelog
 - DevOps day locations
 - devops page title
 
