@@ -1,0 +1,15 @@
+name: Buildc Application
+
+on: push
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
