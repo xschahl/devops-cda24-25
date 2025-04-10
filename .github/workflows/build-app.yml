@@ -32,13 +32,13 @@ jobs:
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=docker,dest=${{ runner.temp }}/${{ steps.meta.outputs.labels }}.tar
+          outputs: type=docker,dest=${{ runner.temp }}/image-artefact.tar
 
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.labels }}
-          path: ${{ runner.temp }}/${{ steps.meta.outputs.labels }}.tar
+          name: image-artefact
+          path: ${{ runner.temp }}/image-artefact.tar
 
   publish:
     name: Publish
