@@ -1,6 +1,11 @@
 name: Build Application
 
-on: push
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - "v*.*.*"
 
 env:
   REGISTRY: ghcr.io
@@ -32,13 +37,13 @@ jobs:
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=docker,dest=${{ runner.temp }}/${{ github.repository }}-artifact.tar
+          outputs: type=docker,dest=${{ runner.temp }}/image.tar
 
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.repository }}-artifact
-          path: ${{ runner.temp }}/${{ github.repository }}-artifact.tar
+          name: image
+          path: ${{ runner.temp }}/image.tar
 
   publish:
     name: Publish
@@ -65,12 +70,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.repository }}-artifact
+          name: image
           path: ${{ runner.temp }}
 
       - name: Load Docker image from artifact
         run: |
-          docker load --input ${{ runner.temp }}/${{ github.repository }}-artifact.tar
+          docker load --input ${{ runner.temp }}/image.tar
           docker image ls -a
 
       - name: Push Docker image
