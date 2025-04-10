@@ -32,13 +32,13 @@ jobs:
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=docker,dest=${{ runner.temp }}/image-artefact.tar
+          outputs: type=docker,dest=${{ runner.temp }}/image.tar
 
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: image-artefact
-          path: ${{ runner.temp }}/image-artefact.tar
+          name: image
+          path: ${{ runner.temp }}/image.tar
 
   publish:
     name: Publish
@@ -65,4 +65,16 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: built-image
+          name: image
+
+      - name: Download artifact
+        run: |
+          docker load --input ${{ runner.temp }}/image.tar
+          docker image ls -a
+
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ghcr.io/${{ github.repository }}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
