@@ -66,12 +66,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: image
+          path: ${{ runner.temp }}
 
       - name: Load Docker image from artifact
-        run: docker load -i ${{ runner.temp }}/image.tar
-
-      - name: Download artifact
-        run: docker image ls -a
+        run: |
+          docker load --input ${{ runner.temp }}/myimage.tar
+          docker image ls -a
 
       # - name: Generate artifact attestation
       #   uses: actions/attest-build-provenance@v2
