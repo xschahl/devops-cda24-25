@@ -67,6 +67,9 @@ jobs:
         with:
           name: image
 
+      - name: Load Docker image from artifact
+        run: docker load -i ${{ runner.temp }}/image.tar
+
       - name: Download artifact
         run: docker image ls -a
 
