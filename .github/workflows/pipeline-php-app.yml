@@ -15,9 +15,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./php-app
 
     steps:
       - name: Checkout code
@@ -36,7 +33,7 @@ jobs:
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: .
+          context: ./php-app
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -80,12 +77,10 @@ jobs:
           path: ${{ runner.temp }}
 
       - name: Load Docker image from artifact
-        run: |
-          docker load --input ${{ runner.temp }}/image.tar
-          docker image ls -a
+        run: docker load --input ${{ runner.temp }}/image.tar
 
       - name: Push Docker image
-        run: docker push --all-tags ghcr.io/${{ github.repository }}
+        run: docker push --all-tags ghcr.io/${{ env.IMAGE_NAME }}
 
       # - name: Generate artifact attestation
       #   uses: actions/attest-build-provenance@v2
