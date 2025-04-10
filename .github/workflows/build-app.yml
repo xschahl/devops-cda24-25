@@ -2,19 +2,40 @@ name: Build Application
 
 on: push
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
+    name: Build Docker image
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t devops-cda-24-25-app:$(date +%s) .
+        run: docker build -t ${{ env.IMAGE_NAME }}:$(date +%s) .
 
   publish:
+    name: Publish Docker image
     needs: build
     runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
     steps:
       - name: Checkout du code
         uses: actions/checkout@v2
+
+      - name: Login to Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
