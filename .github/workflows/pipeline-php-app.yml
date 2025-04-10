@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - "*"
-    paths:
-      - "php-app/**"
-
-  push:
     tags:
-      - '*.*.*'
+      - "*.*.*"
 
 env:
   REGISTRY: ghcr.io
