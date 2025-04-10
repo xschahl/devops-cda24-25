@@ -13,7 +13,7 @@ jobs:
         run: docker build -t devops-cda-24-25-app:$(date +%s) .
 
   publish:
-    needs: setup
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du code
