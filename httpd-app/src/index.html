@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevOps Days Events</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>DevOps Days Events</h1>
+    <div id="json-list"></div>
+
+    <script>
+      // Fonction pour afficher chaque objet JSON dans une liste
+      function displayJsonData(data) {
+        const container = document.getElementById("json-list");
+        data.forEach((person) => {
+          const ul = document.createElement("ul");
+
+          for (const key in person) {
+            if (person.hasOwnProperty(key)) {
+              if (key === "logo_url") {
+                const br = document.createElement("br");
+                ul.appendChild(br);
+
+                const img = document.createElement("img");
+                img.src = person[key];
+                ul.appendChild(img);
+              } else {
+                const li = document.createElement("li");
+                li.innerHTML = `<span>${key} :</span> ${person[key]}`;
+                ul.appendChild(li);
+              }
+            }
+          }
+
+          container.appendChild(ul);
+        });
+      }
+
+      // Appel de la fonction pour afficher les données
+      fetch("events.json")
+        .then((response) => response.json()) // Convertir la réponse en JSON
+        .then((json) => displayJsonData(json.data)) // Afficher les données
+        .catch((error) => {
+          console.error("Erreur de chargement du fichier JSON:", error); // Afficher une erreur en cas de problème
+        });
+    </script>
+  </body>
+</html>
