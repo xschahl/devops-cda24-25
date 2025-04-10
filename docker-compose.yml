@@ -20,7 +20,7 @@ services:
       - cda-network
 
   php:
-    build: .
+    image: ghcr.io/xschahl/devops-cda24-25:latest
     container_name: php_container
     env_file:
       - .env
