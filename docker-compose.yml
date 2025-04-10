@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-container
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - cda-network
+
+  php:
+    build: .
+    container_name: php_container
+    env_file:
+      - .env
+    ports:
+      - "82:80"
+    environment:
+      - DB_HOST=mariadb-container
+      - DB_USER=${MARIADB_USER}
+      - DB_PASSWORD=${MARIADB_PASSWORD}
+      - DB_NAME=${MARIADB_DATABASE}
+    depends_on:
+      - mariadb
+    networks:
+      - cda-network
+
+volumes:
+  mariadb_data:
+
+networks:
+  cda-network:
+    driver: bridge
