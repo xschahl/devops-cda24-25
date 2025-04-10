@@ -70,7 +70,7 @@ jobs:
 
       - name: Load Docker image from artifact
         run: |
-          docker load --input ${{ runner.temp }}/myimage.tar
+          docker load --input ${{ runner.temp }}/image.tar
           docker image ls -a
 
       # - name: Generate artifact attestation
