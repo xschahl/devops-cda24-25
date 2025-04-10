@@ -5,11 +5,23 @@ on: push
 jobs:
   setup:
     runs-on: ubuntu-latest
+    steps:
+      # Étape 1 : Checkout du code
+      - name: Checkout du code
+        uses: actions/checkout@v2
 
   build:
     needs: setup
     runs-on: ubuntu-latest
+    steps:
+      # Étape 1 : Checkout du code
+      - name: Checkout du code
+        uses: actions/checkout@v2
 
   test:
     needs: build
     runs-on: ubuntu-latest
+    steps:
+      # Étape 1 : Checkout du code
+      - name: Checkout du code
+        uses: actions/checkout@v2
