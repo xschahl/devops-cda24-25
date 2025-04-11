@@ -81,7 +81,9 @@ jobs:
 
       - name: Get image digest
         id: image_digest
-        run: docker image ls --digests
+        run: |
+          echo "${{ steps.meta.outputs.tags }}"
+          echo "docker image ls ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | grep ${{ steps.meta.outputs.tags }} | awk '{print $3}'"
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
