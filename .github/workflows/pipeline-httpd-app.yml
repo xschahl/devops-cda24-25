@@ -82,7 +82,7 @@ jobs:
       - name: Get image digest
         run: |
           docker image ls -a
-          docker inspect --format='{{index .RepoDigests 0}}' --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2
+          docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2
 
       - name: Echo image digest
         run: echo "${{ steps.image_digest.outputs }}"
