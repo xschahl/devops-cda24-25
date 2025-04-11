@@ -3,6 +3,7 @@ name: Build Application HTTPD
 on:
   push:
     paths:
+      - ".github/workflows/pipeline-httpd-app.yml"
       - "httpd-app/**"
     branches:
       - "*"
