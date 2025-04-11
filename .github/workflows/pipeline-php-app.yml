@@ -76,6 +76,9 @@ jobs:
       - name: Load Docker image from artifact
         run: docker load --input ${{ runner.temp }}/image.tar
 
+      - name: Push Docker image
+        run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
       - name: Get image digest
         id: image_digest
         run: |
