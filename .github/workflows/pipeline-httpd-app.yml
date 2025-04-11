@@ -82,7 +82,8 @@ jobs:
       - name: Get image digest
         id: image_digest
         run: |
-          echo "$(docker image ls ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --digests | grep main | awk '{print $3}')"
+          DIGEST=$(docker image ls ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --digests | grep main | awk '{print $3}')
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
