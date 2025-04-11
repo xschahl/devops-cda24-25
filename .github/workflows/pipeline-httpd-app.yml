@@ -49,9 +49,6 @@ jobs:
     name: Publish
     needs: build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./php-app
 
     permissions:
       packages: write
