@@ -77,19 +77,14 @@ jobs:
         run: docker load --input ${{ runner.temp }}/image.tar
 
       - name: Push Docker image
-        run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Get image digest
+        id: push_image
         run: |
-          docker image ls -a
-          docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2
-
-      - name: Echo image digest
-        run: echo "${{ steps.image_digest.outputs }}"
+          DIGEST=$(docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | tee /dev/stderr | grep 'digest:' | awk '{print $2}')
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.image_digest.outputs.digest }}
+          subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
