@@ -79,7 +79,7 @@ jobs:
       - name: Push Docker image
         id: push_image
         run: |
-          DIGEST=$(docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | tee /dev/stderr | grep 'digest:' | awk '{print $2}')
+          DIGEST=$(docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | grep 'main: digest:' | awk '{print $2}')
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
       - name: Get digest
