@@ -3,7 +3,7 @@ name: Build Application PHP
 on:
   push:
     branches:
-      - "*"
+      - "php-app/**"
     tags:
       - "*.*.*"
 

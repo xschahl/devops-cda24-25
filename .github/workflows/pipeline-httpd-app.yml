@@ -2,6 +2,8 @@ name: Build Application HTTPD
 
 on:
   push:
+    paths:
+      - "httpd-app/**"
     branches:
       - "*"
     tags:
