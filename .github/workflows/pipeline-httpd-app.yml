@@ -80,8 +80,7 @@ jobs:
         run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Get image digest
-        id: image_digest
-        run: docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2
+        run: docker image ls -a
 
       - name: Echo image digest
         run: echo "${{ steps.image_digest.outputs }}"
