@@ -77,12 +77,14 @@ jobs:
         run: docker load --input ${{ runner.temp }}/image.tar
 
       - name: Push Docker image
-        run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        run: |
+          docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker image ls -a
 
       - name: Get image digest
         id: image_digest
         run: |
-          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2)
+          export DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | cut -d'@' -f2)
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
       - name: Generate artifact attestation
