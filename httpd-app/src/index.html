@@ -1,42 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevOps Days Events</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
-    <h1>DevOps Days Events</h1>
-    <div id="json-list"></div>
+    <header class="main-header">
+      <nav class="navbar">
+        <div class="logo">
+          <i class="fas fa-code-branch"></i>
+          <span>DevOps Days</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Événements</a></li>
+          <li><a href="#">À propos</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="hero">
+        <h1>DevOps Days Events</h1>
+        <p class="subtitle">
+          Découvrez les prochains événements DevOps dans le monde
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="filter-bar">
+        <button class="filter-button active" data-filter="all">Tous</button>
+        <button class="filter-button" data-filter="2025-04">Avril 2025</button>
+        <button class="filter-button" data-filter="2025-05">Mai 2025</button>
+        <button class="filter-button" data-filter="2025-06">Juin 2025</button>
+      </div>
+
+      <div id="json-list" class="events-grid"></div>
+    </div>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>À propos de DevOps Days</h3>
+          <p>
+            DevOpsDays est une série mondiale de conférences techniques couvrant
+            les sujets de développement logiciel, d'opérations IT, et
+            l'intersection entre les deux.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Liens rapides</h3>
+          <ul>
+            <li><a href="#">Événements</a></li>
+            <li><a href="#">Sponsors</a></li>
+            <li><a href="#">Ressources</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Suivez-nous</h3>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DevOps Days. Tous droits réservés.</p>
+      </div>
+    </footer>
 
     <script>
-      // Fonction pour afficher chaque objet JSON dans une liste
+      // Fonction pour formater la date
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("fr-FR", options);
+      }
+
+      // Fonction pour extraire le mois et l'année
+      function getMonthYear(dateString) {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}`;
+      }
+
+      // Fonction pour afficher chaque objet JSON dans une carte
       function displayJsonData(data) {
         const container = document.getElementById("json-list");
-        data.forEach((person) => {
-          const ul = document.createElement("ul");
+        container.innerHTML = "";
 
-          for (const key in person) {
-            if (person.hasOwnProperty(key)) {
-              if (key === "logo_url") {
-                const br = document.createElement("br");
-                ul.appendChild(br);
+        data.forEach((event) => {
+          const card = document.createElement("div");
+          card.className = "event-card";
+          card.dataset.date = getMonthYear(event.date);
 
-                const img = document.createElement("img");
-                img.src = person[key];
-                ul.appendChild(img);
-              } else {
-                const li = document.createElement("li");
-                li.innerHTML = `<span>${key} :</span> ${person[key]}`;
-                ul.appendChild(li);
-              }
-            }
-          }
+          // Image avec overlay pour l'effet de profondeur
+          const imageContainer = document.createElement("div");
+          imageContainer.className = "image-container";
 
-          container.appendChild(ul);
+          const img = document.createElement("img");
+          img.src = event.logo_url;
+          img.alt = `${event.location} event logo`;
+
+          imageContainer.appendChild(img);
+          card.appendChild(imageContainer);
+
+          // Contenu de la carte
+          const content = document.createElement("div");
+          content.className = "card-content";
+
+          const location = document.createElement("h3");
+          location.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${event.location}`;
+
+          const date = document.createElement("p");
+          date.className = "event-date";
+          date.innerHTML = `<i class="far fa-calendar-alt"></i> ${formatDate(
+            event.date
+          )}`;
+
+          const button = document.createElement("a");
+          button.href = "#";
+          button.className = "event-button";
+          button.textContent = "En savoir plus";
+
+          content.appendChild(location);
+          content.appendChild(date);
+          content.appendChild(button);
+
+          card.appendChild(content);
+          container.appendChild(card);
         });
       }
+
+      // Filtrage des événements
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButtons = document.querySelectorAll(".filter-button");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // Mettre à jour la classe active
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            const filter = button.dataset.filter;
+            const cards = document.querySelectorAll(".event-card");
+
+            cards.forEach((card) => {
+              if (filter === "all") {
+                card.style.display = "block";
+              } else {
+                if (card.dataset.date === filter) {
+                  card.style.display = "block";
+                } else {
+                  card.style.display = "none";
+                }
+              }
+            });
+          });
+        });
+      });
 
       // Appel de la fonction pour afficher les données
       fetch("events.json")
@@ -44,6 +174,9 @@
         .then((json) => displayJsonData(json.data)) // Afficher les données
         .catch((error) => {
           console.error("Erreur de chargement du fichier JSON:", error); // Afficher une erreur en cas de problème
+          const container = document.getElementById("json-list");
+          container.innerHTML =
+            '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Impossible de charger les événements. Veuillez réessayer plus tard.</div>';
         });
     </script>
   </body>
