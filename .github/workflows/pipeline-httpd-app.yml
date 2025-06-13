@@ -78,9 +78,3 @@ jobs:
 
       - name: Push Docker image
         run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Get image digest
-        id: image_digest
-        run: |
-          DIGEST=$(docker image ls ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --digests | grep ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | awk '{print $3}')
-          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
